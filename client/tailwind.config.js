@@ -52,7 +52,14 @@ export default {
   				'3': 'hsl(var(--chart-3))',
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
-  			}
+  			},
+			'custom-blue': '#F0F9FF',
+			'custom-purple':'#EAE3FA',
+			'custom-pink':'#FFF0F7',
+			'custom-darkPink':'#EAE3FA',
+			'custom-yellow':'#FFFAE1',
+			'custom-red':'#FCE5F0',
+			'custom-selectedPurple':'#B21FDC',
   		}
   	}
   },

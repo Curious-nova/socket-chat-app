@@ -3,16 +3,18 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
 import { toast } from "sonner";
-import { apiClient } from "@/lib/api-client"
+import { apiClient } from "@/lib/api-client";
 import { LOGIN_ROUTE, SIGNUP_ROUTE } from "@/utils/constants";
 import { useNavigate } from "react-router-dom";
 import { useAppstore } from "@/store";
+
 const Auth = () => {
   const navigate = useNavigate();
-  const { setUserInfo }=useAppstore();
+  const { setUserInfo } = useAppstore();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const validateSignup = () => {
     if (!email.length) {
@@ -23,12 +25,13 @@ const Auth = () => {
       toast.error("Password is required.");
       return false;
     }
-    if (password != confirmPassword) {
-      toast.error("Password and confirm password should be same.")
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match.");
       return false;
     }
     return true;
-  }
+  };
+
   const validateLogin = () => {
     if (!email.length) {
       toast.error("Email is required.");
@@ -39,31 +42,52 @@ const Auth = () => {
       return false;
     }
     return true;
-  }
+  };
+
   const handleLogin = async () => {
-    if (validateLogin()) {
-      const response = await apiClient.post(LOGIN_ROUTE, { email, password }, { withCredentials: true })
+    if (!validateLogin()) return;
+
+    setIsLoading(true); // Set loading to true
+    try {
+      const response = await apiClient.post(LOGIN_ROUTE, { email, password }, { withCredentials: true });
       console.log({ response });
-      
+
       if (response.data.user.id) {
-        setUserInfo(response.data.user)
-        if (response.data.user.profileSetup) { navigate("/chat"); }
-        else {
+        setUserInfo(response.data.user);
+        if (response.data.user.profileSetup) {
+          navigate("/chat");
+        } else {
           navigate("/profile");
         }
       }
+    } catch (error) {
+      toast.error("Login failed. Please check your credentials.");
+      console.error("Error logging in:", error.response?.data || error.message);
+    } finally {
+      setIsLoading(false); // Set loading to false
     }
-  }
+  };
+
   const handleRegister = async () => {
-    if (validateSignup()) {
-      const response = await apiClient.post(SIGNUP_ROUTE, { email, password }, { withCredentials: true })
+    if (!validateSignup()) return;
+
+    setIsLoading(true); // Set loading to true
+    try {
+      const response = await apiClient.post(SIGNUP_ROUTE, { email, password }, { withCredentials: true });
       console.log({ response });
+
       if (response.status === 201) {
-        setUserInfo(response.data.user)
+        setUserInfo(response.data.user);
         navigate("/profile");
       }
+    } catch (error) {
+      toast.error("Registration failed. Please try again.");
+      console.error("Error registering:", error.response?.data || error.message);
+    } finally {
+      setIsLoading(false); // Set loading to false
     }
-  }
+  };
+
   return (
     <div className="h-[100vh] w-[100vw] flex items-center justify-center">
       <div className="h-[80vh] bg-white border-2 text-opacity-90 shadow-2xl w-[80vw] md:w-[90vw] lg:w-[70vw] xl:w-[60vw] rounded-3xl grid xl:grid-cols-2">
@@ -110,8 +134,12 @@ const Auth = () => {
                 onChange={(e) => setPassword(e.target.value)}
               />
               <div className="flex items-center justify-center">
-                <Button className="p-6 rounded-full mt-5" onClick={handleLogin}>
-                  Login
+                <Button
+                  className="p-6 rounded-full mt-5"
+                  onClick={handleLogin}
+                  disabled={isLoading} // Disable button while loading
+                >
+                  {isLoading ? "Logging in..." : "Login"}
                 </Button>
               </div>
             </TabsContent>
@@ -137,13 +165,13 @@ const Auth = () => {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
-
               <div className="flex items-center justify-center">
                 <Button
                   className="p-6 rounded-full mt-5"
                   onClick={handleRegister}
+                  disabled={isLoading} // Disable button while loading
                 >
-                  Register
+                  {isLoading ? "Registering..." : "Register"}
                 </Button>
               </div>
             </TabsContent>
