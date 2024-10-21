@@ -32,7 +32,7 @@ const ProfileInfo = () => {
   };
 
   return (
-    <div className="absolute bottom-0 flex justify-between items-center px-10 w-full bg-[#2a2b33]">
+    <div className="absolute bottom-0 flex justify-between items-center px-5 w-full bg-[#2a2b33]">
       <div className="flex gap-3 items-center justify-center">
         <div className="w-12 h-12 relative">
           <Avatar className="h-12 w-12 rounded-full overflow-hidden">
@@ -40,16 +40,22 @@ const ProfileInfo = () => {
               <AvatarImage
                 src={userInfo.image}
                 alt="Profile"
-                className="object-cover"
+                className="object-cover w-full h-full bg-black"
               />
             ) : (
-              <AvatarFallback
-                className={`text-lg uppercase ${getColor(userInfo.color)}`}
-              >
+              // <AvatarFallback
+              //   className={`text-lg uppercase ${getColor(userInfo.color)}`}
+              // >
+              //   {userInfo.firstName
+              //     ? userInfo.firstName.charAt(0)+userInfo.lastName.charAt(0).toUpperCase()
+              //     : userInfo.email.charAt(0)}
+              // </AvatarFallback>
+              <div
+                className={`uppercase h-12 w-12 border-[1px] text-lg flex items-center justify-center rounded-full ${getColor(userInfo.color)}`}>
                 {userInfo.firstName
-                  ? userInfo.firstName.charAt(0)+userInfo.lastName.charAt(0).toUpperCase()
-                  : userInfo.email.charAt(0)}
-              </AvatarFallback>
+                  ? userInfo.firstName.split("").shift() + userInfo.lastName.split("").shift()
+                  : userInfo.email.split("").shift()}
+              </div>
             )}
           </Avatar>
         </div>
@@ -59,7 +65,7 @@ const ProfileInfo = () => {
             : ""}
         </div>
       </div>
-      <div className="flex gap-5">
+      <div className="flex">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger>
@@ -80,7 +86,7 @@ const ProfileInfo = () => {
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
-      </div> 
+      </div>
     </div>
   );
 };
