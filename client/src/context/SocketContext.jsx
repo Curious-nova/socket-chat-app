@@ -32,7 +32,17 @@ export const SocketProvider = ({children})=>{
                 addMessage(message);
             }
         };
+        const handleRecieveChannekMessage = (message) => {
+            const {selectedChatData,selectedChatType,addMessage,addChannelInChannelList} =useAppstore.getState();
+            if(selectedChatType !== undefined && selectedChatData._id === message.channelId)
+            {
+                addMessage(message);
+            }
+            // addChannelInChannelList(message)
+
+        }
         socket.current.on("recieveMessage",handleRecieveMessage);
+        socket.current.on("recieve-channel-message",handleRecieveChannekMessage)
         return ()=>{
             socket.current.disconnect();
         }

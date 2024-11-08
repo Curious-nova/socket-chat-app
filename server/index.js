@@ -9,6 +9,7 @@ import setupSocket from './socket.js';
 import messagesRoutes from './routes/MessagesRoutes.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import channelRoutes from './routes/ChannelRoutes.js';
 
 // Load environment variables
 dotenv.config();
@@ -35,6 +36,7 @@ app.use('/uploads/files', express.static(path.join(__dirname, 'uploads', 'files'
 app.use("/api/auth", authRoutes);
 app.use("/api/contacts", contactsRoutes);
 app.use("/api/messages", messagesRoutes);
+app.use("/api/channel",channelRoutes)
 
 const PORT = process.env.PORT || 3000;
 const MONGO_URI = process.env.MONGO_URI;
