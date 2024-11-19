@@ -15,9 +15,15 @@ export const GET_ALL_CONTACTS_ROUTES= `${HOST}/${CONTACTS_ROUTES}/get-all-contac
 
 export const MESSAGES_ROUTES = "api/messages";
 export const GET_ALL_MESSAGES_ROUTE = `${HOST}/${MESSAGES_ROUTES}/get-messages`;
+export const DELETE_MESSAGE_ROUTE = `${HOST}/${MESSAGES_ROUTES}/delete-messages`;
 export const UPLOAD_FILE_ROUTE=`${HOST}/${MESSAGES_ROUTES}/upload-file`;
 
 export const CHANNEL_ROUTES = "api/channel";
 export const CREATE_CHANNEL_ROUTE = `${HOST}/${CHANNEL_ROUTES}/create-channel`;
 export const GET_USER_CHANNEL_ROUTE =  `${HOST}/${CHANNEL_ROUTES}/get-user-channels`;
 export const GET_CHANNEL_MESSAGES = `${HOST}/${CHANNEL_ROUTES}/get-channel-messages`;
+export const GET_CHANNEL_MEMBERS = `${HOST}/${CHANNEL_ROUTES}/get-channel-member`;
+export const REMOVE_CHANNEL_MEMBERS = `${HOST}/${CHANNEL_ROUTES}/remove-channel-member`;
+export const ADD_CHANNEL_MEMBERS = `${HOST}/${CHANNEL_ROUTES}/add-channel-member`;
+export const MAKE_CHANNEL_ADMIN = `${HOST}/${CHANNEL_ROUTES}/make-channel-admin`;
+

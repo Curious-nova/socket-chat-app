@@ -21,6 +21,17 @@ export const getMessages = async (request, response, next) => {
       }
 };
 
+export const deleteMessage = async (request, response, next) =>{
+  try {
+       const {messageId} = request.params;
+    const messages = await Message.findByIdAndDelete({ _id:messageId });
+    return response.status(200).json({messages});
+  } catch (error) {
+    console.error("Error during logout:", error);
+    return response.status(500).send("Internal Server Error");
+  }
+}
+
 export const uploadFile = async (request, response, next) => {
     try {
         if(!request.file){

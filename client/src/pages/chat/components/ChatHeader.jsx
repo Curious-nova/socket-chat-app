@@ -1,11 +1,13 @@
-import { useAppstore } from '@/store';
-import React from 'react'
-import { RiCloseFill } from "react-icons/ri";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { getColor } from "@/lib/utils";
+import React, { useState } from 'react'
+import { useAppstore } from '@/store'
+import { RiCloseFill, RiInformationLine } from "react-icons/ri"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { getColor } from "@/lib/utils"
+import ChannelInfo from './ChannelInfo'
 
-const ChatHeader = () => {
-  const { closeChat, selectedChatData, selectedChatType } = useAppstore();
+export default function ChatHeader() {
+  const { closeChat, selectedChatData, selectedChatType } = useAppstore()
+  const [isChannelInfoOpen, setIsChannelInfoOpen] = useState(false)
 
   return (
     <div className='h-[10vh] border-b-2 border-[#2f303b] flex items-center justify-between px-20'>
@@ -31,7 +33,11 @@ const ChatHeader = () => {
                 )}
               </Avatar>
             ) : (
-              <div className='bg-[#ffffff22] h-10 w-10 flex items-center justify-center rounded-full'>#</div>
+              <div
+                    className={`uppercase h-12 w-12 border-[1px] text-lg flex items-center justify-center rounded-full ${getColor(selectedChatData.color)}`}
+                  >
+                    {selectedChatData.name.charAt(0) }
+                  </div>
             )}
           </div>
           <div>
@@ -43,13 +49,22 @@ const ChatHeader = () => {
         </div>
 
         <div className="flex justify-center items-center gap-5">
+          {selectedChatType === "channel" && (
+            <button
+              className='text-neutral-500 focus:border-none focus:outline-none focus:text-white duration-300 transition-all'
+              onClick={() => setIsChannelInfoOpen(true)}
+            >
+              <RiInformationLine className='text-3xl' />
+            </button>
+          )}
           <button className='text-neutral-500 focus:border-none focus:outline-none focus:text-white duration-300 transition-all' onClick={closeChat}>
             <RiCloseFill className='text-3xl' />
           </button>
         </div>
       </div>
+      {selectedChatType === "channel" && isChannelInfoOpen && (
+        <ChannelInfo isOpen={isChannelInfoOpen} onClose={() => setIsChannelInfoOpen(false)} />
+      )}
     </div>
   )
 }
-
-export default ChatHeader;

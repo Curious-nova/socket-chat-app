@@ -1,4 +1,4 @@
-    import { Server as SocketIOServer } from "socket.io";
+import { Server as SocketIOServer } from "socket.io";
 import Message from "./models/MessagesModel.js";
 import Channel from "./models/ChannelModel.js";
 
@@ -69,29 +69,34 @@ const setupSocket = (server) => {
             // Update the channel with the new message
             await Channel.findByIdAndUpdate(channelId, {
                 $push: { messages: createdMessage._id },
+                lastMessage: content,
+                lastMessageTime: createdMessage.Timestamp
             });
 
             const channel = await Channel.findById(channelId).populate("members");
 
             const finalData = { ...messageData._doc, channelId: channel._id };
             if (channel && channel.members) {
-
                 channel.members.forEach((member) => {
                     const memberSocketId = userSocketMap.get(member._id.toString());
                     if (memberSocketId) {
                         io.to(memberSocketId).emit("receive-channel-message", finalData);
                     }
                 });
-
-                // Send to admin
-                const adminSocketId = userSocketMap.get(channel.admin._id.toString());
-                if (adminSocketId) {
-                    io.to(adminSocketId).emit("receive-channel-message", finalData);
-                }
             }
         } catch (error) {
             console.error("Error sending channel message:", error);
         }
+    };
+
+    const handleTyping = (data) => {
+        const { chatId, userId } = data;
+        io.emit("user-typing", { chatId, userId });
+    };
+
+    const handleStopTyping = (data) => {
+        const { chatId, userId } = data;
+        io.emit("user-stop-typing", { chatId, userId });
     };
 
     io.on("connection", (socket) => {
@@ -105,6 +110,8 @@ const setupSocket = (server) => {
 
         socket.on("sendMessage", sendMessage);
         socket.on("send-channel-message", sendChannelMessage);
+        socket.on("typing", handleTyping);
+        socket.on("stop-typing", handleStopTyping);
         socket.on("disconnect", () => disconnect(socket));
     });
 };

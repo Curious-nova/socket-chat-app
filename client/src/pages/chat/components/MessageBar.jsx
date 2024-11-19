@@ -1,5 +1,3 @@
-'use client'
-
 import React, { useEffect, useRef, useState } from "react"
 import { GrAttachment } from "react-icons/gr"
 import { RiEmojiStickerLine } from "react-icons/ri"
@@ -9,6 +7,14 @@ import { useAppstore } from "@/store"
 import { useSocket } from "@/context/SocketContext"
 import { apiClient } from "@/lib/api-client"
 import { UPLOAD_FILE_ROUTE } from "@/utils/constants"
+import CryptoJS from "crypto-js"
+
+const SECRET_KEY = "socket-chat-app" // Replace with a strong key
+
+// Function to encrypt a message
+const encryptMessage = (message) => {
+  return CryptoJS.AES.encrypt(message, SECRET_KEY).toString()
+}
 
 export default function Component() {
   const { selectedChatType, selectedChatData, userInfo, setIsUploading, setFileUploadProgress } = useAppstore()
@@ -23,10 +29,14 @@ export default function Component() {
   }
 
   const handleSendMessage = async () => {
+    if (!message.trim()) return // Avoid sending empty messages
+
+    const encryptedMessage = encryptMessage(message) // Encrypt the message
+
     if (selectedChatType === "contact") {
       socket.emit("sendMessage", {
         sender: userInfo.id,
-        content: message,
+        content: encryptedMessage, // Send encrypted message
         recipient: selectedChatData._id,
         messageType: "text",
         fileUrl: undefined,
@@ -34,7 +44,7 @@ export default function Component() {
     } else if (selectedChatType === "channel") {
       socket.emit("send-channel-message", {
         sender: userInfo.id,
-        content: message,
+        content: encryptedMessage, // Send encrypted message
         messageType: "text",
         fileUrl: undefined,
         channelId: selectedChatData._id,
