@@ -12,6 +12,7 @@ import {
   HOST,
   ADD_CHANNEL_MEMBERS,
   GET_ALL_CONTACTS_ROUTES,
+  DELETE_CHANNEL
 } from '@/utils/constants';
 import { UserPlus, Crown } from 'lucide-react';
 import MultipleSelector from '@/components/multipleselect';
@@ -84,11 +85,17 @@ export default function ChannelInfo({ isOpen, onClose }) {
         `${MAKE_CHANNEL_ADMIN}/${selectedChatData._id}/${newAdminId}`,
         { withCredentials: true }
       );
-      setMembers(response.data.members);
-      setIsAdmin(response.data.admin === userInfo.id);
-      setAdmindetails(response.data.adminDetails || null);
+
+      if (response && response.data) {
+        setMembers(response.data.members);
+        setIsAdmin(response.data.admin === userInfo.id);
+        setAdmindetails(response.data.adminDetails || null);
+        useAppstore.setState({
+          selectedChatData: { ...selectedChatData, admin: newAdminId },
+        });
+      }
     } catch (error) {
-      console.error('Error transferring ownership:', error);
+      console.error("Error transferring ownership:", error);
     }
   };
 
@@ -115,15 +122,32 @@ export default function ChannelInfo({ isOpen, onClose }) {
       );
       if (response && response.data) {
         setMembers(response.data.channel.members);
-        setSelectedContacts([]); 
+        setSelectedContacts([]);
       }
-      
+
     } catch (error) {
       toast.error("Member already present");
-      setSelectedContacts([]); 
+      setSelectedContacts([]);
     }
   };
-  
+
+  const handleDeleteChannel = async () => {
+    if (window.confirm("Are you sure you want to delete this channel? This action cannot be undone.")) {
+      try {
+        await apiClient.delete(
+          `${DELETE_CHANNEL}/${selectedChatData._id}`,
+          { withCredentials: true }
+        );
+        toast.success("Channel deleted successfully.");
+        closeChat();
+      } catch (error) {
+        console.error("Error deleting channel:", error);
+        toast.error("Failed to delete the channel. Please try again.");
+      }
+    }
+  };
+
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="bg-gray-800 text-white">
@@ -134,18 +158,32 @@ export default function ChannelInfo({ isOpen, onClose }) {
           <div className="flex justify-between items-center">
             <h3 className="text-lg font-semibold">Members:</h3>
             {isAdmin && (
-              <Button
-                onClick={() => setShowAddMember(!showAddMember)}
-                variant="outline"
-                size="sm"
-                className="bg-gray-700 hover:bg-gray-600"
-              >
-                <UserPlus className="mr-2 h-4 w-4" />
-                Add Member
-              </Button>
+              <>
+                <div className="space-y-4">
+                  <Button
+                    onClick={() => setShowAddMember(!showAddMember)}
+                    variant="outline"
+                    size="sm"
+                    className="bg-gray-700 hover:bg-gray-600"
+                  >
+                    <UserPlus className="mr-2 h-4 w-4" />
+                    Add Member
+                  </Button>
+                </div>
+                <div className="space-y-4">
+                  <Button
+                    variant="destructive"
+                    onClick={handleDeleteChannel}
+                    className="w-full bg-red-600 hover:bg-red-700"
+                  >
+                    Delete Channel
+                  </Button>
+                </div>
+              </>
             )}
+
           </div>
-          
+
           {showAddMember && (
             <div className="space-y-2">
               <MultipleSelector

@@ -30,7 +30,7 @@ const messageSchema = new mongoose.Schema({
     },
     Timestamp:{
         type:Date,
-        default:Date.now(),
+        default:Date.now,
     },
 });
 

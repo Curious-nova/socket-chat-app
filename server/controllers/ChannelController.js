@@ -235,3 +235,31 @@ export const AddMembers = async (request, response, next) => {
     }
 };
 
+export const deleteChannel = async (request, response, next) => {
+    try {
+        const { channelId } = request.params;
+        console.log(channelId)
+        // Validate channelId
+        if (!mongoose.Types.ObjectId.isValid(channelId)) {
+            return response.status(400).send("Invalid Channel ID");
+        }
+
+        // Find the channel
+        const channel = await Channel.findById(channelId);
+
+        // Check if the channel exists
+        if (!channel) {
+            return response.status(404).send("Channel not found");
+        }
+
+        // Delete the channel
+        await Channel.findByIdAndDelete(channelId);
+
+        // Respond with a success message
+        return response.status(200).send("Channel deleted successfully");
+    } catch (error) {
+        console.error(error);
+        return response.status(500).send("Internal Server Error");
+    }
+};
+

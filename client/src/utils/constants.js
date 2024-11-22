@@ -26,4 +26,5 @@ export const GET_CHANNEL_MEMBERS = `${HOST}/${CHANNEL_ROUTES}/get-channel-member
 export const REMOVE_CHANNEL_MEMBERS = `${HOST}/${CHANNEL_ROUTES}/remove-channel-member`;
 export const ADD_CHANNEL_MEMBERS = `${HOST}/${CHANNEL_ROUTES}/add-channel-member`;
 export const MAKE_CHANNEL_ADMIN = `${HOST}/${CHANNEL_ROUTES}/make-channel-admin`;
+export const DELETE_CHANNEL = `${HOST}/${CHANNEL_ROUTES}/delete-channel`;
 
