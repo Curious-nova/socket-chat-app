@@ -63,7 +63,7 @@ export default function Profile() {
   
 
   return (
-    <div className="bg-background min-h-screen flex justify-center items-center flex-col gap-10 p-4">
+    <div className="bg-foreground min-h-screen flex justify-center items-center flex-col gap-10 p-4">
       <div className="flex flex-col gap-10 w-full max-w-md">
         <Button
           variant="ghost"
@@ -71,7 +71,7 @@ export default function Profile() {
           onClick={() => navigate(-1)}
           className="self-start"
         >
-          <ArrowLeft className="h-6 w-6" />
+          <ArrowLeft className="h-6 w-6 text-white hover:text-black" />
           <span className="sr-only">Go back</span>
         </Button>
       </div>

@@ -1,5 +1,3 @@
-'use client'
-
 import React, { useEffect, useState } from 'react'
 import ProfileInfo from './ProfileInfo'
 import NewDM from './NewDm'
@@ -11,7 +9,7 @@ import CreateChannel from './CreateChannel'
 import { PlusCircle, Search } from 'lucide-react'
 import { Input } from "@/components/ui/input"
 import { useSocket } from "@/context/SocketContext"
-
+import Logo from "../../../assets/Logo.png"
 export default function ContactContainer() {
   const {
     setDirectMessagesContacts,
@@ -82,7 +80,12 @@ export default function ContactContainer() {
   return (
     <div className="relative md:w-[35vw] lg:w-[30vw] xl:w-[20vw] bg-gradient-to-b from-gray-900 to-gray-800 border-r border-gray-700 w-full h-screen flex flex-col">
       <div className="p-4 flex-shrink-0">
-        <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg shadow-lg mb-6"></div>
+        <div className='flex items-center'>
+        <div className="mb-4">
+            <img src={Logo} alt="Logo" className="w-16 h-16 rounded-full" />
+          </div>
+        <p className='text-4xl ml-5 mb-7'><span className='text-red-500'>C</span>hit <span className='text-red-500'>C</span>hat</p>
+        </div>
         <div className="relative mb-4">
           <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
           <Input

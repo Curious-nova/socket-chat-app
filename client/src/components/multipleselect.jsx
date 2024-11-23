@@ -40,7 +40,7 @@ const MultipleSelector = ({
   return (
     <div className={`relative w-full max-w-xl ${className}`} onKeyDown={handleKeyDown}>
       <div className="w-full">
-        <div className="rounded-md p-2  text-white focus-within:ring-2 focus-within:ring-blue-500">
+        <div className="rounded-md p-2  text-white">
           <div className="flex flex-wrap gap-2">
             {value.map((item) => (
               <span
